@@ -41,14 +41,14 @@ const movieInstructionLayout = borsh.struct([
 ]);
 
 function sendTestMovieReview(signer, programId, connection) {
-  let buffer = Buffer.alloc(1000);
-  const movieTitle = "The Dark Knight" + Math.random() * 1000000;
+  let buffer = Buffer.alloc(10000);
+  const movieTitle = "Knight" + Math.random() * 10;
   movieInstructionLayout.encode(
     {
       variant: 0,
       title: movieTitle,
-      rating: 100,
-      description: "awesome movie of all time",
+      rating: 5,
+      description: "awesome movie",
     },
     buffer
   );
@@ -73,42 +73,42 @@ function sendTestMovieReview(signer, programId, connection) {
           isWritable: false,
         },
         {
-          pubkey : pda,
-          isSigner : false,
-          isWritable : true
+          pubkey: pda,
+          isSigner: false,
+          isWritable: true,
         },
         {
-          pubkey : web3.SystemProgram.programId,
-          isSigner : false,
-          isWritable : false
+          pubkey: web3.SystemProgram.programId,
+          isSigner: false,
+          isWritable: false,
         },
       ],
     });
 
     transaction.add(instruction);
-    return web3.sendAndConfirmTransaction(connection,transaction,[signer]);
+    return web3.sendAndConfirmTransaction(connection, transaction, [signer]);
   });
 }
 
-function main(){
+function main() {
   const signer = intializeSignerKeyPair();
 
   const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
-  return airdropSolIfNeeded(signer,connection).then (async ()=>{
+  return airdropSolIfNeeded(signer, connection).then(async () => {
     const movieProgramId = new web3.PublicKey(
-      "4xfoSEcCqNNoxJXA5Mwb91YRtZ5XdaCEfKG372CQVDwy"
+      "68hTdZxxUS9b4Fc18c1Hb2MbheRup74HiLoF7JkActcU"
     );
-    let hash = await sendTestMovieReview(signer,movieProgramId,connection);
+    let hash = await sendTestMovieReview(signer, movieProgramId, connection);
     console.log(hash);
   });
 }
 
 main()
-.then(()=>{
-  console.log("finished successfuly");
-  process.exit(0);
-})
-.catch((error)=> {
-  console.log(error);
-  process.exit(1);
-});
+  .then(() => {
+    console.log("finished successfuly");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.log(error);
+    process.exit(1);
+  });
